@@ -1,6 +1,5 @@
 package snake;
 
-
 import javax.swing.*;
 
 /**

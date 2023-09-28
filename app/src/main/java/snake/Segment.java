@@ -11,17 +11,17 @@ public class Segment {
     int y;
 
 
-    public Segment(int x, int y){
+    public Segment(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    public void move(int dx, int dy){
+    public void move(int dx, int dy) {
         x += dx;
         y += dy;
     }
 
-    public void translate(Segment seg){
+    public void translate(Segment seg) {
         x = seg.x;
         y = seg.y;
     }

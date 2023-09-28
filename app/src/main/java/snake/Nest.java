@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.time.Duration;
 
 /**
  * The nest is the container wherein is a snake, and an egg.
@@ -14,7 +15,7 @@ public class Nest extends JPanel {
     private Graphics2D graphics;
     private Egg egg;
     private Serpent serpent;
-    private Timer timer;
+    private final Timer timer;
     private Direction direction;
     /**
      * Decides whether it's permissible to trigger keyboard
@@ -30,16 +31,18 @@ public class Nest extends JPanel {
     private boolean failed;
     private boolean isPlaying;
     private JMenuBar menuBar;
-    private Theme theme;
-    public static final int SLOW = 1_000/5;
-    public static final int AVERAGE = 1_000/10;
-    public static final int FAST = 1_000/20;
-    public static final int WIDTH = 700;
-    public static final int HEIGHT = 500;
+    private final Theme theme;
+    // Frame Dimension
+    public static final int WIDTH = 1000;
+    public static final int HEIGHT = 700;
     public static final int UNIT_SIZE = 25;
+    // Snake Speed
+    public static final int SLOW = 1000/5;
+    public static final int AVERAGE = 1000/10;
+    public static final int FAST = 1000/20;
 
 
-    public Nest(){
+    public Nest() {
         egg = new Egg();
         serpent = new Serpent();
         direction = new Direction(Direction.RIGHT);
@@ -48,8 +51,8 @@ public class Nest extends JPanel {
             serpent.run(direction.getPath(), egg);
             failed = collide();
             if (failed) {
-                UIManager.getLookAndFeel().provideErrorFeedback(getParent());
                 stop();
+                UIManager.getLookAndFeel().provideErrorFeedback(getParent());
             }
             repaint();
         });
@@ -76,6 +79,12 @@ public class Nest extends JPanel {
                 if (active) {
                     direction.setPath(code);
                     active = false;
+                } else { // Suspend the action then for some arbitrary time
+                    final Timer onceTimer = new Timer(100, e1 -> {
+                        direction.setPath(code);
+                    });
+                    onceTimer.setRepeats(false);
+                    onceTimer.start();
                 }
             }
         });
@@ -94,12 +103,12 @@ public class Nest extends JPanel {
         }
     }
 
-    private void placeEgg(){
+    private void placeEgg() {
         graphics.setColor(theme.eggColor);
         graphics.fillOval(egg.x, egg.y, UNIT_SIZE, UNIT_SIZE);
     }
 
-    private void drawSerpent(){
+    private void drawSerpent() {
         for (int i = serpent.length() - 1; i >= 0; i--) {
             final Segment seg = serpent.segmentAt(i);
             if (seg == serpent.head()) {
@@ -118,14 +127,14 @@ public class Nest extends JPanel {
         }
     }
 
-    private void writeScore(){
+    private void writeScore() {
         graphics.setFont(new Font("Ink Free", Font.BOLD, 20));
         final String scoreText = "Score: "+getScore();
         graphics.setColor(theme.labelColor);
         graphics.drawString(scoreText, 4, HEIGHT - 4);
     }
 
-    private void writeFailMessage(){
+    private void writeFailMessage() {
         graphics.setFont(new Font("Ink Free", Font.BOLD, 100));
         final FontMetrics metrics = getFontMetrics(graphics.getFont());
         final String overText = "Game Over";
@@ -133,17 +142,18 @@ public class Nest extends JPanel {
         graphics.drawString(overText, (WIDTH - metrics.stringWidth(overText))/2, HEIGHT/2);
     }
 
-    private boolean collide(){
-//        collision of the bounds
+    private boolean collide() {
+       //  Get the head
         final Segment head = serpent.head();
+
+       // collision of the bounds
         if (head.x < 0 || head.x >= WIDTH) {
             return true;
         } else if (head.y < 0 || head.y >= HEIGHT) {
             return true;
         }
 
-//        collision of body parts; this comes with a side-effect
-//        please see #active
+       // collision of body parts
         for (int i = 1; i < serpent.length(); i++) {
             final Segment seg = serpent.segmentAt(i);
             if (head.x == seg.x && head.y == seg.y) {
@@ -154,21 +164,21 @@ public class Nest extends JPanel {
         return false;
     }
 
-    private int getScore(){
+    private int getScore() {
         return (serpent.length() - 3) * 10;
     }
 
-    private void play(){
+    private void play() {
         isPlaying = true;
         timer.start();
     }
 
-    private void stop(){
+    private void stop() {
         timer.stop();
         isPlaying = false;
     }
 
-    private void restart(){
+    private void restart() {
         egg = new Egg();
         serpent = new Serpent();
         direction = new Direction(Direction.RIGHT);
@@ -177,7 +187,7 @@ public class Nest extends JPanel {
         timer.start();
     }
 
-    private void setupMenuBar(){
+    private void setupMenuBar() {
         final Font itemFont = new Font("Arial", Font.BOLD, 15);
 
         final JMenuItem slowItem = new JMenuItem("Slow");
@@ -206,15 +216,15 @@ public class Nest extends JPanel {
         blackItem.setFont(itemFont);
         blackItem.addActionListener(e-> theme.setDark());
 
-        final JMenuItem greenItem = new JMenuItem("Grass Land");
-        greenItem.setFont(itemFont);
-        greenItem.addActionListener(e-> theme.setGrassLand());
+        // final JMenuItem greenItem = new JMenuItem("Grass Land");
+        // greenItem.setFont(itemFont);
+        // greenItem.addActionListener(e-> theme.setGrassLand());
 
         final JMenu themeMenu = new JMenu("Theme");
         themeMenu.setMnemonic(KeyEvent.VK_T);
         themeMenu.add(whiteItem);
         themeMenu.add(blackItem);
-        themeMenu.add(greenItem);
+        // themeMenu.add(greenItem);
 
         menuBar = new JMenuBar();
         menuBar.setBackground(Color.WHITE);
@@ -222,7 +232,7 @@ public class Nest extends JPanel {
         menuBar.add(themeMenu);
     }
 
-    public JMenuBar getMenuBar(){
+    public JMenuBar getMenuBar() {
         return menuBar;
     }
 

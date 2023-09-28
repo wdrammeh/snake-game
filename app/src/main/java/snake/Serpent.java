@@ -8,21 +8,21 @@ import java.util.ArrayList;
  * first element, and the tail, the last.
  */
 public class Serpent {
-    private ArrayList<Segment> body;
+    private final ArrayList<Segment> body;
 
 
-    public Serpent(){
+    public Serpent() {
         body = new ArrayList<>();
         for (int i = 2; i >= 0; i--) {
             body.add(new Segment(i * Nest.UNIT_SIZE, 0));
         }
     }
 
-    public Segment segmentAt(int i){
+    public Segment segmentAt(int i) {
         return body.get(i);
     }
 
-    public int length(){
+    public int length() {
         return body.size();
     }
 
@@ -42,27 +42,23 @@ public class Serpent {
      * the egg will regenerate and reposition itself within the nest,
      * as specified by {@link Egg#replace()}.
      */
-    public void run(char dir, Egg egg){
+    public void run(char dir, Egg egg) {
         for (int i = length() - 1; i > 0; i--) {
             body.get(i).translate(body.get(i - 1));
         }
         final Segment head = head();
-        switch (dir){
-            case Direction.RIGHT:{
+        switch (dir) {
+            case Direction.RIGHT -> {
                 head.move(Nest.UNIT_SIZE, 0);
-                break;
             }
-            case Direction.LEFT:{
+            case Direction.LEFT -> {
                 head.move(-Nest.UNIT_SIZE, 0);
-                break;
             }
-            case Direction.UP:{
+            case Direction.UP -> {
                 head.move(0, -Nest.UNIT_SIZE);
-                break;
             }
-            case Direction.DOWN:{
+            case Direction.DOWN -> {
                 head.move(0, Nest.UNIT_SIZE);
-                break;
             }
         }
         if (head().x == egg.x && head().y == egg.y) {
@@ -72,7 +68,7 @@ public class Serpent {
         }
     }
 
-    public void grow(){
+    public void grow() {
         final Segment tail = tail();
         body.add(new Segment(tail.x, tail.y));
     }

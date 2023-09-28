@@ -10,19 +10,19 @@ import java.util.Random;
 public class Egg {
     int x;
     int y;
-    private Random r;
+    private final Random r;
 
 
-    public Egg(){
+    public Egg() {
         r = new Random();
         replace();
     }
 
     /**
      * Repositions this egg, randomly, within the nest.
-     * Call this if an egg is been eaten.
+     * Call this if an egg is being eaten.
      */
-    public void replace(){
+    public void replace() {
         x = r.nextInt(Math.floorDiv(Nest.WIDTH, Nest.UNIT_SIZE)) * Nest.UNIT_SIZE;
         y = r.nextInt(Math.floorDiv(Nest.HEIGHT, Nest.UNIT_SIZE)) * Nest.UNIT_SIZE;
     }
