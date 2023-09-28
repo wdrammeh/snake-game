@@ -29,6 +29,12 @@ application {
     mainClass = 'snake.Player'
 }
 
+jar {
+    manifest {
+        attributes 'Main-Class': 'snake.Player'
+    }
+}
+
 tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
