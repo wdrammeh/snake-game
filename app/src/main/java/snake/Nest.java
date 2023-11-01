@@ -80,11 +80,11 @@ public class Nest extends JPanel {
                     direction.setPath(code);
                     active = false;
                 } else { // Suspend the action then for some arbitrary time
-                    final Timer onceTimer = new Timer(100, e1 -> {
+                    final Timer aTimer = new Timer(timer.getDelay(), e1 -> {
                         direction.setPath(code);
                     });
-                    onceTimer.setRepeats(false);
-                    onceTimer.start();
+                    aTimer.setRepeats(false);
+                    aTimer.start();
                 }
             }
         });
