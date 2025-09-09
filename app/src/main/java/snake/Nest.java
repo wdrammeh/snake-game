@@ -34,7 +34,7 @@ public class Nest extends JPanel {
     private final Theme theme;
     // Frame Dimension
     public static final int WIDTH = 1000;
-    public static final int HEIGHT = 700;
+    public static final int HEIGHT = 600;
     public static final int UNIT_SIZE = 25;
     // Snake Speed
     public static final int SLOW = 1000/5;
